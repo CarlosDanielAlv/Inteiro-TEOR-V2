@@ -103,9 +103,12 @@ def generate_documents_r1(df, documentos_gerados):
         set_table_borders(table)
         doc.paragraphs[insert_position]._element.addnext(table._element)
 
-         # Salva o documento em um arquivo temporário
+        # Nome personalizado do arquivo baseado no template
+        output_file_docx = f"INTEIRO TEOR RECURSO 1ª INSTÂNCIA {row['NumeroAuto']}.docx"
+        output_file_pdf = f"INTEIRO TEOR RECURSO 1ª INSTÂNCIA {row['NumeroAuto']}.pdf"
+
+        # Salva o documento no diretório temporário
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
-            output_file_docx = tmp.name
             doc.save(output_file_docx)
             documentos_gerados.append(output_file_docx)
 
@@ -180,8 +183,10 @@ def generate_documents_r2(df, documentos_gerados):
         # Insere a tabela no local correto (após "Nº DA SESSÃO DE JULGAMENTO")
         doc.paragraphs[insert_position]._element.addnext(table._element)
 
+        output_file_docx = f"INTEIRO TEOR RECURSO 2ª INSTÂNCIA {row['NumeroAuto']}.docx"
+        output_file_pdf = f"INTEIRO TEOR RECURSO 2ª INSTÂNCIA {row['NumeroAuto']}.pdf"
+
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
-            output_file_docx = tmp.name
             doc.save(output_file_docx)
             documentos_gerados.append(output_file_docx)
 
@@ -223,8 +228,10 @@ def generate_documents_da(df, documentos_gerados):
             if '{{Fundamentacao}}' in paragraph.text:
                 paragraph.text = paragraph.text.replace('{{Fundamentacao}}', str(row['Fundamentacao']))
 
+        output_file_docx = f"INTEIRO TEOR DEFESA DA AUTUAÇÃO {row['NumeroAuto']}.docx"
+        output_file_pdf = f"INTEIRO TEOR DEFESA DA AUTUAÇÃO {row['NumeroAuto']}.pdf"
+
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
-            output_file_docx = tmp.name
             doc.save(output_file_docx)
             documentos_gerados.append(output_file_docx)
 
