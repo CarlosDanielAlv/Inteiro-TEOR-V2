@@ -31,7 +31,7 @@ def generate_documents(df, template_paths):
     documentos_pdf = []
 
     # Converter documentos gerados para PDF e renomear conforme o padrão
-    for docx_buffer, template in documentos_gerados:
+    for docx_buffer, template, row in documentos_gerados:
         pdf_buffer = convert_to_pdf(docx_buffer)
 
         # Define o novo nome para o arquivo PDF baseado no modelo
@@ -123,7 +123,7 @@ def generate_documents_r1(df, documentos_gerados):
         docx_buffer = BytesIO()
         doc.save(docx_buffer)
         docx_buffer.seek(0)
-        documentos_gerados.append((docx_buffer, "modelo_r1.docx"))
+        documentos_gerados.append((docx_buffer, "modelo_r1.docx",row))
 
 def generate_documents_r2(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -199,7 +199,7 @@ def generate_documents_r2(df, documentos_gerados):
         docx_buffer = BytesIO()
         doc.save(docx_buffer)
         docx_buffer.seek(0)
-        documentos_gerados.append((docx_buffer, "modelo_r2.docx"))
+        documentos_gerados.append((docx_buffer, "modelo_r2.docx",row))
 
 def generate_documents_da(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -242,7 +242,7 @@ def generate_documents_da(df, documentos_gerados):
         docx_buffer = BytesIO()
         doc.save(docx_buffer)
         docx_buffer.seek(0)
-        documentos_gerados.append((docx_buffer, "modelo_da.docx"))
+        documentos_gerados.append((docx_buffer, "modelo_da.docx",row))
 
 def set_table_borders(table):
     for row in table.rows:
