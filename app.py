@@ -10,6 +10,9 @@ st.title('Gerador de Documentos e Conversor para PDF')
 # Upload do arquivo Excel
 uploaded_excel = st.file_uploader("Carregar arquivo Excel", type=["xlsx"])
 
+# Inicializa a variável zip_buffer fora do formulário para verificá-la mais tarde
+zip_buffer = None
+
 # Organizar todos os componentes dentro de um formulário
 with st.form(key='document_form'):
     # Verifica se o arquivo foi carregado
@@ -24,7 +27,7 @@ with st.form(key='document_form'):
             'Decisão de Recurso Segunda Instância': 'modelo_r2.docx'
         }
         selected_template = st.multiselect("Selecione os modelos de documento", list(
-        template_choices.keys()), placeholder="Selecione um ou mais modelos")
+            template_choices.keys()), placeholder="Selecione um ou mais modelos")
 
     # Botão para enviar o formulário (submit)
     submit_button = st.form_submit_button("Gerar Documentos")
@@ -37,7 +40,7 @@ with st.form(key='document_form'):
             with st.spinner('Gerando documentos...'):
                 template_paths = [template_choices[modelo]
                                   for modelo in selected_template]
-                
+
                 # Chama a função para gerar os documentos passando o DataFrame lido
                 documentos_gerados = generate_documents(df, template_paths)
 
@@ -56,15 +59,12 @@ with st.form(key='document_form'):
                     except Exception as e:
                         st.error(f"Erro ao gerar ZIP: {e}")
 
-     # O botão de download deve estar fora do st.form()
-    if 'zip_buffer' in locals():
-        # Botão para baixar o arquivo zip
-        st.download_button(
-            label="Baixar Todos os PDFs",
-            data=zip_buffer,  # Passando zip_buffer diretamente, já que ele contém os bytes
-            file_name="documentos_gerados.zip",
-            mime="application/zip"
-        )
-                
-
-                
+# O botão de download deve estar fora do st.form()
+if zip_buffer:
+    # Botão para baixar o arquivo zip
+    st.download_button(
+        label="Baixar Todos os PDFs",
+        data=zip_buffer,  # Passando zip_buffer diretamente, já que ele contém os bytes
+        file_name="documentos_gerados.zip",
+        mime="application/zip"
+    )
