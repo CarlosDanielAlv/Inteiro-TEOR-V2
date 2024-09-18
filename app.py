@@ -45,7 +45,7 @@ with st.form(key='document_form'):
                 documentos_gerados = generate_documents(df, template_paths)
 
                 # Converter documentos gerados para PDF e zipá-los
-                pdf_files = [docx_file.replace('.docx', '.pdf') for docx_file in documentos_gerados]
+                pdf_files = [(pdf, name) for pdf, name in documentos_gerados]
                 st.write("Arquivos gerados:", pdf_files)
 
                 # Verificar se algum arquivo PDF foi gerado

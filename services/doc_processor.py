@@ -5,6 +5,7 @@ import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from services.file_converter import convert_to_pdf  # Importa a função de conversão
 import tempfile
+from io import BytesIO
 
 # Função para gerar documentos com paralelismo na conversão para PDF
 def generate_documents(df, template_paths):
@@ -27,12 +28,28 @@ def generate_documents(df, template_paths):
         for future in as_completed(futures):
             future.result()  # Assegura que exceções são capturadas
 
-     # Converter documentos gerados para PDF
-    for docx_file in documentos_gerados:
-        if docx_file.endswith(".docx"):
-            convert_to_pdf(docx_file)
+    documentos_pdf = []
 
-    return documentos_gerados
+    # Converter documentos gerados para PDF e renomear conforme o padrão
+    for docx_buffer, template in documentos_gerados:
+        pdf_buffer = convert_to_pdf(docx_buffer)
+
+        # Define o novo nome para o arquivo PDF baseado no modelo
+        if template == "modelo_r1.docx":
+            new_pdf_name = f"INTEIRO TEOR RECURSO 1ª INSTÂNCIA {get_numero_auto_from_docx(df)}.pdf"
+        elif template == "modelo_r2.docx":
+            new_pdf_name = f"INTEIRO TEOR RECURSO 2ª INSTÂNCIA {get_numero_auto_from_docx(df)}.pdf"
+        elif template == "modelo_da.docx":
+            new_pdf_name = f"INTEIRO TEOR DEFESA DA AUTUAÇÃO {get_numero_auto_from_docx(df)}.pdf"
+
+        documentos_pdf.append((pdf_buffer, new_pdf_name))
+
+    return documentos_pdf
+
+def get_numero_auto_from_docx(df):
+    # Esta função extrai o número do auto associado ao documento
+    numero_auto = df['NumeroAuto'].iloc[0]  # Exemplo simples
+    return numero_auto
 
 def generate_documents_r1(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -103,11 +120,10 @@ def generate_documents_r1(df, documentos_gerados):
         set_table_borders(table)
         doc.paragraphs[insert_position]._element.addnext(table._element)
 
-         # Salva o documento em um arquivo temporário
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
-            output_file_docx = tmp.name
-            doc.save(output_file_docx)
-            documentos_gerados.append(output_file_docx)
+        docx_buffer = BytesIO()
+        doc.save(docx_buffer)
+        docx_buffer.seek(0)
+        documentos_gerados.append((docx_buffer, "modelo_r1.docx"))
 
 def generate_documents_r2(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -180,10 +196,10 @@ def generate_documents_r2(df, documentos_gerados):
         # Insere a tabela no local correto (após "Nº DA SESSÃO DE JULGAMENTO")
         doc.paragraphs[insert_position]._element.addnext(table._element)
 
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
-            output_file_docx = tmp.name
-            doc.save(output_file_docx)
-            documentos_gerados.append(output_file_docx)
+        docx_buffer = BytesIO()
+        doc.save(docx_buffer)
+        docx_buffer.seek(0)
+        documentos_gerados.append((docx_buffer, "modelo_r2.docx"))
 
 def generate_documents_da(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -223,10 +239,10 @@ def generate_documents_da(df, documentos_gerados):
             if '{{Fundamentacao}}' in paragraph.text:
                 paragraph.text = paragraph.text.replace('{{Fundamentacao}}', str(row['Fundamentacao']))
 
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
-            output_file_docx = tmp.name
-            doc.save(output_file_docx)
-            documentos_gerados.append(output_file_docx)
+        docx_buffer = BytesIO()
+        doc.save(docx_buffer)
+        docx_buffer.seek(0)
+        documentos_gerados.append((docx_buffer, "modelo_da.docx"))
 
 def set_table_borders(table):
     for row in table.rows:
