@@ -27,21 +27,12 @@ def generate_documents(df, template_paths):
         for future in as_completed(futures):
             future.result()  # Assegura que exceções são capturadas
 
-    # Converter documentos gerados para PDF e garantir que o PDF seja gerado
-    pdf_files = []
+     # Converter documentos gerados para PDF
     for docx_file in documentos_gerados:
         if docx_file.endswith(".docx"):
-            # Gerar o nome do PDF baseado no nome do DOCX
-            output_pdf_filename = docx_file.replace(".docx", ".pdf")
-            convert_to_pdf(docx_file, output_pdf_filename)
+            convert_to_pdf(docx_file)
 
-            # Verificar se o PDF foi gerado corretamente
-            if os.path.exists(output_pdf_filename):
-                pdf_files.append(output_pdf_filename)
-            else:
-                raise FileNotFoundError(f"PDF {output_pdf_filename} não foi gerado.")
-
-    return pdf_files  # Retornar os arquivos PDF gerados
+    return documentos_gerados
 
 def generate_documents_r1(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -112,13 +103,11 @@ def generate_documents_r1(df, documentos_gerados):
         set_table_borders(table)
         doc.paragraphs[insert_position]._element.addnext(table._element)
 
-        # Nome personalizado do arquivo baseado no template
-        docx_filename = f"INTEIRO TEOR RECURSO 1ª INSTÂNCIA {row['NumeroAuto']}.docx"
-        output_file_pdf = docx_filename.replace(".docx", ".pdf")
-
+         # Salva o documento em um arquivo temporário
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
-            doc.save(docx_filename)
-            documentos_gerados.append(output_file_pdf)
+            output_file_docx = tmp.name
+            doc.save(output_file_docx)
+            documentos_gerados.append(output_file_docx)
 
 def generate_documents_r2(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -191,12 +180,10 @@ def generate_documents_r2(df, documentos_gerados):
         # Insere a tabela no local correto (após "Nº DA SESSÃO DE JULGAMENTO")
         doc.paragraphs[insert_position]._element.addnext(table._element)
 
-        docx_filename = f"INTEIRO TEOR RECURSO 2ª INSTÂNCIA {row['NumeroAuto']}.docx"
-        output_file_pdf = docx_filename.replace(".docx", ".pdf")
-
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
-            doc.save(docx_filename)
-            documentos_gerados.append(output_file_pdf)
+            output_file_docx = tmp.name
+            doc.save(output_file_docx)
+            documentos_gerados.append(output_file_docx)
 
 def generate_documents_da(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -236,12 +223,10 @@ def generate_documents_da(df, documentos_gerados):
             if '{{Fundamentacao}}' in paragraph.text:
                 paragraph.text = paragraph.text.replace('{{Fundamentacao}}', str(row['Fundamentacao']))
 
-        docx_filename = f"INTEIRO TEOR DEFESA DA AUTUAÇÃO {row['NumeroAuto']}.docx"
-        output_pdf_filename = docx_filename.replace(".docx", ".pdf")
-
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
-            doc.save(docx_filename)
-            documentos_gerados.append(output_pdf_filename)
+            output_file_docx = tmp.name
+            doc.save(output_file_docx)
+            documentos_gerados.append(output_file_docx)
 
 def set_table_borders(table):
     for row in table.rows:
