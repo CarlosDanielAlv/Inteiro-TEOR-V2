@@ -45,8 +45,12 @@ with st.form(key='document_form'):
                 pdf_files = [docx_file.replace('.docx', '.pdf') for docx_file in documentos_gerados]
                 st.write("Arquivos gerados:", pdf_files)
 
-                # Zipar os PDFs usando a função no file_converter
-                zip_buffer = zip_pdfs(pdf_files)
+                 # Zipar os PDFs usando a função no file_converter
+                try:
+                    zip_buffer = zip_pdfs(pdf_files)
+                    st.write("Arquivo ZIP gerado com sucesso.")
+                except Exception as e:
+                    st.error(f"Erro ao gerar ZIP: {e}")
 
                 # Botão para baixar o arquivo zip
                 st.download_button(
