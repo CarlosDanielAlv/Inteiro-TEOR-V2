@@ -27,18 +27,21 @@ def generate_documents(df, template_paths):
         for future in as_completed(futures):
             future.result()  # Assegura que exceções são capturadas
 
-     # Converter documentos gerados para PDF
+    # Converter documentos gerados para PDF e garantir que o PDF seja gerado
+    pdf_files = []
     for docx_file in documentos_gerados:
-        # Assumindo que documentos_gerados contenha caminhos de arquivos DOCX
         if docx_file.endswith(".docx"):
             # Gerar o nome do PDF baseado no nome do DOCX
             output_pdf_filename = docx_file.replace(".docx", ".pdf")
             convert_to_pdf(docx_file, output_pdf_filename)
 
-            # Atualiza a lista com o nome do PDF gerado
-            documentos_gerados[documentos_gerados.index(docx_file)] = output_pdf_filename
+            # Verificar se o PDF foi gerado corretamente
+            if os.path.exists(output_pdf_filename):
+                pdf_files.append(output_pdf_filename)
+            else:
+                raise FileNotFoundError(f"PDF {output_pdf_filename} não foi gerado.")
 
-    return documentos_gerados
+    return pdf_files  # Retornar os arquivos PDF gerados
 
 def generate_documents_r1(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
