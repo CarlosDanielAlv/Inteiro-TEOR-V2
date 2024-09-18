@@ -16,7 +16,6 @@ def zip_pdfs(pdf_files):
     """Cria um arquivo zip contendo todos os PDFs gerados"""
     zip_buffer = BytesIO()
     
-    # Adicionando uma verificação se os arquivos existem antes de zipar
     if not pdf_files:
         raise ValueError("Nenhum PDF foi gerado para ser zipado.")
     
@@ -28,4 +27,4 @@ def zip_pdfs(pdf_files):
                 raise FileNotFoundError(f"Arquivo {pdf_file} não encontrado.")
     
     zip_buffer.seek(0)  # Volta o ponteiro ao início do buffer
-    return zip_buffer
+    return zip_buffer.getvalue()  # Retorna o conteúdo do buffer para o botão de download

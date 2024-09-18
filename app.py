@@ -50,14 +50,15 @@ with st.form(key='document_form'):
                     zip_buffer = zip_pdfs(pdf_files)
                     st.write("Conteúdo do ZIP gerado: ", zip_buffer.getvalue()[:100])
                     st.write("Arquivo ZIP gerado com sucesso.")
-                except Exception as e:
-                    st.error(f"Erro ao gerar ZIP: {e}")
 
-                # Oferece o download do arquivo ZIP
-                with open("documentos_gerados.zip", "rb") as f:
+                     # Botão para baixar o arquivo zip
                     st.download_button(
                         label="Baixar Todos os PDFs",
-                        data=zip_buffer,
+                        data=zip_buffer,  # Conteúdo do ZIP
                         file_name="documentos_gerados.zip",
                         mime="application/zip"
                     )
+                except Exception as e:
+                    st.error(f"Erro ao gerar ZIP: {e}")
+
+                
