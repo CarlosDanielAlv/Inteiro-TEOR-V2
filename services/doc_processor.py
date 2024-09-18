@@ -104,13 +104,12 @@ def generate_documents_r1(df, documentos_gerados):
         doc.paragraphs[insert_position]._element.addnext(table._element)
 
         # Nome personalizado do arquivo baseado no template
-        output_file_docx = f"INTEIRO TEOR RECURSO 1ª INSTÂNCIA {row['NumeroAuto']}.docx"
-        output_file_pdf = f"INTEIRO TEOR RECURSO 1ª INSTÂNCIA {row['NumeroAuto']}.pdf"
+        docx_filename = f"INTEIRO TEOR RECURSO 1ª INSTÂNCIA {row['NumeroAuto']}.docx"
+        output_file_pdf = docx_filename.replace(".docx", ".pdf")
 
-        # Salva o documento no diretório temporário
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
-            doc.save(output_file_docx)
-            documentos_gerados.append(output_file_docx)
+            doc.save(docx_filename)
+            documentos_gerados.append(output_file_pdf)
 
 def generate_documents_r2(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -183,12 +182,12 @@ def generate_documents_r2(df, documentos_gerados):
         # Insere a tabela no local correto (após "Nº DA SESSÃO DE JULGAMENTO")
         doc.paragraphs[insert_position]._element.addnext(table._element)
 
-        output_file_docx = f"INTEIRO TEOR RECURSO 2ª INSTÂNCIA {row['NumeroAuto']}.docx"
-        output_file_pdf = f"INTEIRO TEOR RECURSO 2ª INSTÂNCIA {row['NumeroAuto']}.pdf"
+        docx_filename = f"INTEIRO TEOR RECURSO 2ª INSTÂNCIA {row['NumeroAuto']}.docx"
+        output_file_pdf = docx_filename.replace(".docx", ".pdf")
 
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
-            doc.save(output_file_docx)
-            documentos_gerados.append(output_file_docx)
+            doc.save(docx_filename)
+            documentos_gerados.append(output_file_pdf)
 
 def generate_documents_da(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -228,12 +227,12 @@ def generate_documents_da(df, documentos_gerados):
             if '{{Fundamentacao}}' in paragraph.text:
                 paragraph.text = paragraph.text.replace('{{Fundamentacao}}', str(row['Fundamentacao']))
 
-        output_file_docx = f"INTEIRO TEOR DEFESA DA AUTUAÇÃO {row['NumeroAuto']}.docx"
-        output_file_pdf = f"INTEIRO TEOR DEFESA DA AUTUAÇÃO {row['NumeroAuto']}.pdf"
+        docx_filename = f"INTEIRO TEOR DEFESA DA AUTUAÇÃO {row['NumeroAuto']}.docx"
+        output_pdf_filename = docx_filename.replace(".docx", ".pdf")
 
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
-            doc.save(output_file_docx)
-            documentos_gerados.append(output_file_docx)
+            doc.save(docx_filename)
+            documentos_gerados.append(output_pdf_filename)
 
 def set_table_borders(table):
     for row in table.rows:
