@@ -48,6 +48,7 @@ with st.form(key='document_form'):
                  # Zipar os PDFs usando a função no file_converter
                 try:
                     zip_buffer = zip_pdfs(pdf_files)
+                    st.write("Conteúdo do ZIP gerado: ", zip_buffer.getvalue()[:100])
                     st.write("Arquivo ZIP gerado com sucesso.")
                 except Exception as e:
                     st.error(f"Erro ao gerar ZIP: {e}")
