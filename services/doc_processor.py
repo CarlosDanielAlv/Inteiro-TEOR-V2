@@ -1,3 +1,5 @@
+# doc_processos.py
+
 import subprocess
 from docx import Document
 from docx.oxml import OxmlElement, ns
@@ -27,12 +29,14 @@ def generate_documents(df, template_paths):
         for future in as_completed(futures):
             future.result()  # Assegura que exceções são capturadas
 
-     # Converter documentos gerados para PDF
-    for docx_file in documentos_gerados:
+    # Converter documentos gerados para PDF
+    pdf_files_with_auto = []
+    for docx_file, numero_auto in documentos_gerados:
         if docx_file.endswith(".docx"):
-            convert_to_pdf(docx_file)
+            pdf_path = convert_to_pdf(docx_file)
+            pdf_files_with_auto.append((pdf_path, numero_auto))  # Adiciona o caminho do PDF e o número do auto
 
-    return documentos_gerados
+    return pdf_files_with_auto  # Retorna a lista de PDFs junto com os números de auto
 
 def generate_documents_r1(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -107,7 +111,7 @@ def generate_documents_r1(df, documentos_gerados):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
             output_file_docx = tmp.name
             doc.save(output_file_docx)
-            documentos_gerados.append(output_file_docx)
+            documentos_gerados.append((output_file_docx, row['NumeroAuto']))
 
 def generate_documents_r2(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -183,7 +187,7 @@ def generate_documents_r2(df, documentos_gerados):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
             output_file_docx = tmp.name
             doc.save(output_file_docx)
-            documentos_gerados.append(output_file_docx)
+            documentos_gerados.append((output_file_docx, row['NumeroAuto']))
 
 def generate_documents_da(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -226,7 +230,7 @@ def generate_documents_da(df, documentos_gerados):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
             output_file_docx = tmp.name
             doc.save(output_file_docx)
-            documentos_gerados.append(output_file_docx)
+            documentos_gerados.append((output_file_docx, row['NumeroAuto']))
 
 def set_table_borders(table):
     for row in table.rows:

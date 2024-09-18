@@ -1,3 +1,5 @@
+# file_converter.py
+
 import subprocess
 import tempfile
 import zipfile
@@ -12,19 +14,20 @@ def convert_to_pdf(doc_path):
         subprocess.call([libreoffice_path, '--headless', '--convert-to', 'pdf', '--outdir', tempfile.gettempdir(), doc_path])
     return output_pdf_path
 
-def zip_pdfs(pdf_files):
-    """Cria um arquivo zip contendo todos os PDFs gerados"""
+def zip_pdfs(pdf_files_with_auto):
+    """Cria um arquivo zip contendo todos os PDFs gerados, renomeando conforme o número do auto"""
     zip_buffer = BytesIO()
     
-    if not pdf_files:
+    if not pdf_files_with_auto:
         raise ValueError("Nenhum PDF foi gerado para ser zipado.")
     
     with zipfile.ZipFile(zip_buffer, 'w') as zip_file:
-        for pdf_file in pdf_files:
+        for pdf_file, numero_auto in pdf_files_with_auto:
             if os.path.exists(pdf_file):
-                zip_file.write(pdf_file, os.path.basename(pdf_file))
+                # Renomeia o arquivo dentro do ZIP com base no número do auto
+                zip_file.write(pdf_file, f"{numero_auto}.pdf")
             else:
                 raise FileNotFoundError(f"Arquivo {pdf_file} não encontrado.")
     
-    zip_buffer.seek(0)  # Volta o ponteiro ao início do buffer
-    return zip_buffer.getvalue()  # Retorna o conteúdo do buffer para o botão de download
+    zip_buffer.seek(0)
+    return zip_buffer.getvalue()

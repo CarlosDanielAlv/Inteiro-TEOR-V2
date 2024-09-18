@@ -1,3 +1,5 @@
+# app.py
+
 import streamlit as st
 import pandas as pd
 from services.doc_processor import generate_documents
@@ -38,23 +40,18 @@ with st.form(key='document_form'):
         else:
             # Exibe um spinner enquanto os documentos estão sendo gerados
             with st.spinner('Gerando documentos...'):
-                template_paths = [template_choices[modelo]
-                                  for modelo in selected_template]
+                template_paths = [template_choices[modelo] for modelo in selected_template]
 
                 # Chama a função para gerar os documentos passando o DataFrame lido
                 documentos_gerados = generate_documents(df, template_paths)
 
-                # Converter documentos gerados para PDF e zipá-los
-                pdf_files = [docx_file.replace('.docx', '.pdf') for docx_file in documentos_gerados]
-                st.write("Arquivos gerados:", pdf_files)
-
                 # Verificar se algum arquivo PDF foi gerado
-                if not pdf_files:
+                if not documentos_gerados:
                     st.error("Nenhum documento foi gerado.")
                 else:
                     try:
                         # Gerar o arquivo zip
-                        zip_buffer = zip_pdfs(pdf_files)
+                        zip_buffer = zip_pdfs(documentos_gerados)
                         st.write("Arquivo ZIP gerado com sucesso.")
                     except Exception as e:
                         st.error(f"Erro ao gerar ZIP: {e}")
