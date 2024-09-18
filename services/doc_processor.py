@@ -4,6 +4,7 @@ from docx.oxml import OxmlElement, ns
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from services.file_converter import convert_to_pdf  # Importa a função de conversão
+import tempfile
 
 # Função para gerar documentos com paralelismo na conversão para PDF
 def generate_documents(df, template_paths):
@@ -102,10 +103,11 @@ def generate_documents_r1(df, documentos_gerados):
         set_table_borders(table)
         doc.paragraphs[insert_position]._element.addnext(table._element)
 
-        # Salva o documento preenchido
-        output_file_docx = f"uploads/INTEIRO TEOR RECURSO 1ª INSTÂNCIA {row['NumeroAuto']}.docx"
-        doc.save(output_file_docx)
-        documentos_gerados.append(output_file_docx)
+         # Salva o documento em um arquivo temporário
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
+            output_file_docx = tmp.name
+            doc.save(output_file_docx)
+            documentos_gerados.append(output_file_docx)
 
 def generate_documents_r2(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -178,10 +180,10 @@ def generate_documents_r2(df, documentos_gerados):
         # Insere a tabela no local correto (após "Nº DA SESSÃO DE JULGAMENTO")
         doc.paragraphs[insert_position]._element.addnext(table._element)
 
-        # Salva o documento preenchido
-        output_file_docx = f"uploads/INTEIRO TEOR RECURSO 2ª INSTÂNCIA {row['NumeroAuto']}.docx"
-        doc.save(output_file_docx)
-        documentos_gerados.append(output_file_docx)
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
+            output_file_docx = tmp.name
+            doc.save(output_file_docx)
+            documentos_gerados.append(output_file_docx)
 
 def generate_documents_da(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -221,10 +223,10 @@ def generate_documents_da(df, documentos_gerados):
             if '{{Fundamentacao}}' in paragraph.text:
                 paragraph.text = paragraph.text.replace('{{Fundamentacao}}', str(row['Fundamentacao']))
 
-        # Salva o documento preenchido
-        output_file_docx = f"uploads/INTEIRO TEOR DEFESA DA AUTUAÇÃO {row['NumeroAuto']}.docx"
-        doc.save(output_file_docx)
-        documentos_gerados.append(output_file_docx)
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
+            output_file_docx = tmp.name
+            doc.save(output_file_docx)
+            documentos_gerados.append(output_file_docx)
 
 def set_table_borders(table):
     for row in table.rows:

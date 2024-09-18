@@ -1,8 +1,10 @@
 import subprocess
+import tempfile
 
 def convert_to_pdf(doc_path):
     """Converte o arquivo DOCX para PDF usando LibreOffice"""
-    output_path = doc_path.replace('.docx', '.pdf')
-    libreoffice_path = "D:\\Program Files\\LibreOffice\\program\\soffice.exe"  # Altere para o caminho correto
-    subprocess.call([libreoffice_path, '--headless', '--convert-to', 'pdf', '--outdir', 'uploads', doc_path])
-    return output_path
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+        output_pdf_path = tmp.name
+        libreoffice_path = "D:\\Program Files\\LibreOffice\\program\\soffice.exe"  # Altere para o caminho correto
+        subprocess.call([libreoffice_path, '--headless', '--convert-to', 'pdf', '--outdir', tempfile.gettempdir(), doc_path])
+    return output_pdf_path
