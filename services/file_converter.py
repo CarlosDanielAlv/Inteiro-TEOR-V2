@@ -8,11 +8,26 @@ import os
 
 def convert_to_pdf(doc_path):
     """Converte o arquivo DOCX para PDF usando LibreOffice"""
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
-        output_pdf_path = tmp.name
-        libreoffice_path = "/usr/bin/soffice"
-        subprocess.call([libreoffice_path, '--headless', '--convert-to', 'pdf', '--outdir', tempfile.gettempdir(), doc_path])
-    return output_pdf_path
+    # Diretório temporário para salvar o PDF convertido
+    output_dir = tempfile.gettempdir()
+    libreoffice_path = "/usr/bin/soffice"
+
+    try:
+        # Comando para converter DOCX para PDF
+        subprocess.run([libreoffice_path, '--headless', '--convert-to', 'pdf', '--outdir', output_dir, doc_path], check=True)
+        
+        # Obter o nome do arquivo PDF esperado
+        pdf_file_name = os.path.basename(doc_path).replace('.docx', '.pdf')
+        output_pdf_path = os.path.join(output_dir, pdf_file_name)
+        
+        # Verificar se o arquivo PDF foi realmente criado
+        if not os.path.exists(output_pdf_path):
+            raise FileNotFoundError(f"O arquivo PDF {output_pdf_path} não foi gerado.")
+
+        return output_pdf_path
+
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(f"Erro na conversão de DOCX para PDF: {e}")
 
 def zip_pdfs(pdf_files_with_auto):
     """Cria um arquivo zip contendo todos os PDFs gerados, renomeando conforme o número do auto"""
