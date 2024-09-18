@@ -43,6 +43,7 @@ with st.form(key='document_form'):
 
                 # Converter documentos gerados para PDF e zipá-los
                 pdf_files = [docx_file.replace('.docx', '.pdf') for docx_file in documentos_gerados]
+                st.write("Arquivos gerados:", pdf_files)
 
                 # Zipar os PDFs usando a função no file_converter
                 zip_buffer = zip_pdfs(pdf_files)

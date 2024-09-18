@@ -15,8 +15,17 @@ def convert_to_pdf(doc_path):
 def zip_pdfs(pdf_files):
     """Cria um arquivo zip contendo todos os PDFs gerados"""
     zip_buffer = BytesIO()
+    
+    # Adicionando uma verificação se os arquivos existem antes de zipar
+    if not pdf_files:
+        raise ValueError("Nenhum PDF foi gerado para ser zipado.")
+    
     with zipfile.ZipFile(zip_buffer, 'w') as zip_file:
         for pdf_file in pdf_files:
-            zip_file.write(pdf_file, os.path.basename(pdf_file))
+            if os.path.exists(pdf_file):
+                zip_file.write(pdf_file, os.path.basename(pdf_file))
+            else:
+                raise FileNotFoundError(f"Arquivo {pdf_file} não encontrado.")
+    
     zip_buffer.seek(0)  # Volta o ponteiro ao início do buffer
     return zip_buffer
