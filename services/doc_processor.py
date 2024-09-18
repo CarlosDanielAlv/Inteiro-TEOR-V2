@@ -29,8 +29,14 @@ def generate_documents(df, template_paths):
 
      # Converter documentos gerados para PDF
     for docx_file in documentos_gerados:
+        # Assumindo que documentos_gerados contenha caminhos de arquivos DOCX
         if docx_file.endswith(".docx"):
-            convert_to_pdf(docx_file)
+            # Gerar o nome do PDF baseado no nome do DOCX
+            output_pdf_filename = docx_file.replace(".docx", ".pdf")
+            convert_to_pdf(docx_file, output_pdf_filename)
+
+            # Atualiza a lista com o nome do PDF gerado
+            documentos_gerados[documentos_gerados.index(docx_file)] = output_pdf_filename
 
     return documentos_gerados
 
