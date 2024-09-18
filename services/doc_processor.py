@@ -111,7 +111,7 @@ def generate_documents_r1(df, documentos_gerados):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
             output_file_docx = tmp.name
             doc.save(output_file_docx)
-            documentos_gerados.append((output_file_docx, row['NumeroAuto']))
+            documentos_gerados.append((output_file_docx, row['NumeroAuto'] + " R1"))
 
 def generate_documents_r2(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -187,7 +187,7 @@ def generate_documents_r2(df, documentos_gerados):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
             output_file_docx = tmp.name
             doc.save(output_file_docx)
-            documentos_gerados.append((output_file_docx, row['NumeroAuto']))
+            documentos_gerados.append((output_file_docx, row['NumeroAuto'] + " R2"))
 
 def generate_documents_da(df, documentos_gerados):
     # Agrupar membros do colegiado e votos por Número do Auto
@@ -230,7 +230,7 @@ def generate_documents_da(df, documentos_gerados):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
             output_file_docx = tmp.name
             doc.save(output_file_docx)
-            documentos_gerados.append((output_file_docx, row['NumeroAuto']))
+            documentos_gerados.append((output_file_docx, row['NumeroAuto']+ " DA"))
 
 def set_table_borders(table):
     for row in table.rows:
