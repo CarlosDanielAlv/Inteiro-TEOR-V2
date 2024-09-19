@@ -15,24 +15,32 @@ st.set_page_config(
     layout="centered"
 )
 
+# Código CSS para remover o header e o footer
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 st.markdown('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">', unsafe_allow_html=True)
 
 st.markdown("""
-<nav class="navbar fixed-top navbar-expand-lg navbar-dark" style="background-color: #3498DB; color: #fff;">
-  <a class="navbar-brand" href="https://youtube.com/dataprofessor" target="_blank">Data Professor</a>
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark" style="background-color: #101535; color: #fff;">
+  <a class="navbar-brand" href="https://www.totalcontrollserget.com.br/" target="_blank">Total Controll</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
+    <span class="navbar-toggler-icon">o que é isso</span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link disabled" href="#">Home <span class="sr-only">(current)</span></a>
+      <li class="nav-item">
+        <a class="nav-link" href="https://docs.google.com/document/d/1U6-LJQV_rLU1911EnlqVVclRatBqtu5ukMLjJCcbsPk/edit?usp=sharing" target="_blank">E-mail Modelo</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="https://youtube.com/dataprofessor" target="_blank">YouTube</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="https://twitter.com/thedataprof" target="_blank">Twitter</a>
+        <a class="nav-link" href="https://docs.google.com/spreadsheets/d/1f-jqeZNni9MYvnWhcUcfFUeEI_gwfBxGvbYQ_6guE2c/edit?usp=sharing" target="_blank">Planilha Modelo</a>
       </li>
     </ul>
   </div>
@@ -40,7 +48,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown('''# **Gerador de Inteiro TEOR**
-Gere Inteiro TEOR DA R1 e R2.
+Siga os padrões de solicitação de E-Mail e de forma obrigatória o modelo de planilha excel.
 ''')
 
 # Upload do arquivo Excel
@@ -109,7 +117,7 @@ footer = """
             left: 0;
             bottom: 0;
             width: 100%;
-            background-color: #262730;
+            background-color: #101535;
             color: #fff;
             text-align: center;
             padding: 10px;
